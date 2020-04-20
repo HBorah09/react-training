@@ -1,0 +1,35 @@
+{
+  "name": "rick-and-morty-show",
+  "version": "1.0.0",
+  "description": "Display the characters of Rick and morty show",
+  "scripts": {
+    "dev": "next -p 7777",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest"
+  },
+  "author": "Hiyamoni Borah",
+  "license": "unlicensed",
+  "dependencies": {
+    "babel-eslint": "^10.1.0",
+    "es6-promise": "4.1.1",
+    "isomorphic-unfetch": "2.0.0",
+    "next": "latest",
+    "next-redux-saga": "4.0.0",
+    "next-redux-wrapper": "2.0.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "5.0.7",
+    "redux": "4.0.1",
+    "redux-saga": "1.0.1",
+    "styled-components": "^5.1.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.9.5",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0",
+    "jest": "^25.3.0",
+    "redux-devtools-extension": "2.13.2"
+  }
+}
