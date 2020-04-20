@@ -55,17 +55,17 @@ export const filterOptions = [
     label: "Species",
     id: "species",
     options: [
-      { id: "human", label: "Human" },
-      { id: "mythology", label: "Mythology" },
-      { id: "others", label: "Other species..." }
+      { id: "Human", label: "Human" },
+      { id: "Mythology", label: "Mythology" },
+      { id: "Other species...", label: "Other species..." }
     ]
   },
   {
     label: "Gender",
     id: "gender",
     options: [
-      { id: "male", label: "Male" },
-      { id: "female", label: "Female" },
+      { id: "Male", label: "Male" },
+      { id: "Female", label: "Female" },
     ]
   },
   {
@@ -73,9 +73,9 @@ export const filterOptions = [
     id: "origin",
     options: [
       { id: "unknown", label: "Unknown" },
-      { id: "post-apocalyptic earth", label: "Post-Apocalyptic Earth" },
-      { id: "nuptia 4", label: "Nupitia 4" },
-      { id: "others", label: "Other origins..." },
+      { id: "Post-Apocalyptic Earth", label: "Post-Apocalyptic Earth" },
+      { id: "Nupitia 4", label: "Nupitia 4" },
+      { id: "Other origins...", label: "Other origins..." },
     ]
   },
 ];

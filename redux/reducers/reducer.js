@@ -1,18 +1,20 @@
-import { LOAD_DATA_SUCCESS, LOAD_DATA_FAIL, FILTER_CHARACTERS, SORT_IDS, SEARCH_NAME } from "../../utils/constants";
+import { LOAD_DATA_SUCCESS, LOAD_DATA_FAIL, FILTER_CHARACTERS, SORT_IDS, SEARCH_NAME, filterOptions } from "../../utils/constants";
 
 let initialList = [];
-const filterList = (filters, results, initialList, name) => {
-  if (!filters.length) {
-    return initialList;
-  }
-  const filtered = initialList.filter(el => {
-    return filters.some(filter => {
-      const characterName = el[`${name}`].name ? el[`${name}`].name : el[`${name}`];
-      return filter[`${name}`] === characterName.toLowerCase();
-    });
-  });
+let filterObject = {};
 
-  return filtered;
+const filterList = initialList => {
+  return initialList.filter(list => {
+    return (filterObject.gender.length ? filterObject.gender.includes(list.gender) : true) &&
+      (filterObject.species.length ? filterObject.species.includes(list.species) : true) &&
+      (filterObject.origin.length ? filterObject.origin.includes(list.origin.name.toLowerCase()) : true);
+  });
+};
+
+const populateFilters = () => {
+  filterOptions.map(option => {
+    return filterObject[`${option.id}`] = [];
+  });
 };
 
 const appReducer = (state = { filters: [] }, action) => {
@@ -24,23 +26,26 @@ const appReducer = (state = { filters: [] }, action) => {
       return { ...state, error: action.error };
     case FILTER_CHARACTERS: {
       const { elem: { name, value, checked }, label } = action.payload;
-      const { initialList, filters, results } = state;
-      let updatedFilters = filters || [];
-      if (checked) {
-        updatedFilters.push({ [name]: value, label });
-      } else {
-        updatedFilters = filters.filter(a => {
-          return !(a[`${name}`] === value.toLowerCase() && Object.prototype.hasOwnProperty.call(a, `${name}`));
-        });
+      const { initialList } = state;
+      if (!filterObject[`${name}`]) {
+        populateFilters();
       }
-      const filteredResults = filterList(updatedFilters, results, initialList, name);
-      return { ...state, filters: updatedFilters, results: filteredResults };
+      const updatedFilter = { ...filterObject };
+      if (checked) {
+        updatedFilter[`${name}`].push(value);
+      } else {
+        const updatedValues = updatedFilter[`${name}`].filter(val => val !== value);
+        updatedFilter[`${name}`] = updatedValues;
+      }
+      filterObject = { ...updatedFilter };
+      const filteredResults = filterList(initialList);
+      return { ...state, filters: updatedFilter, results: filteredResults };
     }
     case SORT_IDS: {
       const { results } = state;
-      const getOrder = (a, b) => (action.payload === "Ascending" ? a.id - b.id : b.id - a.id);
-      const updatedResult = results.sort((a, b) => {
-        return getOrder(a, b);
+      const getOrder = (first, second) => (action.payload === "Ascending" ? first.id - second.id : second.id - first.id);
+      const updatedResult = results.sort((first, second) => {
+        return getOrder(first, second);
       });
       return { ...state, results: updatedResult, order: action.payload };
     }

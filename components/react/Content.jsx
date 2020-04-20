@@ -37,26 +37,44 @@ const renderEachCharacter = characters => {
   });
 };
 
-const displayFilterSelection = selections => {
-  return (
-    <div className="selected-filters">
-      <Title fontSize="16px">{texts.selectedFilter}</Title>
-      {selections.map(choice => {
-        return <Title key={choice} className="selections" fontSize="12px" displayStyle="inline-flex">{choice.label}<button>X</button></Title>;
-      })}
-    </div>
-  );
+const deduceSelectedOptions = selections => {
+  let choices = {};
+  const keys = Object.keys(selections);
+  keys.map(key => {
+    const value = selections[`${key}`];
+    if (value.length) {
+      choices.options = value;
+      choices.key = key;
+    }
+    return choices;
+  });
+  return choices;
+};
+
+const displayFilterSelection = (selections, callback) => {
+  const filters = deduceSelectedOptions(selections);
+  return filters.options && filters.options.length ? (<div className="selected-filters">
+    <Title fontSize="16px">{texts.selectedFilter}</Title>
+    {filters.options.map(choice => {
+      const name = filters.key;
+      return (
+        <Title key={choice} className="selections" fontSize="12px" displayStyle="inline-flex">{choice}
+          <button onClick={() => callback({ elem: { name, value: choice, checked: false }, label: choice })}>X</button>
+        </Title>);
+    })
+    }
+  </div>) : null;
 };
 
 let textInput = null;
 
 const Content = props => {
-  const { filterCharacters, data, filters, sortIds } = props;
+  const { filterCharacters, data, sortIds, filters } = props;
   return (
     <div className="content">
-      <Filters filterCharacters={filterCharacters} />
+      <Filters filterCharacters={filterCharacters} filters={filters} />
       <div className="characters-container">
-        {filters && filters.length ? displayFilterSelection(filters) : null}
+        {filters && displayFilterSelection(filters, filterCharacters)}
         <div className="input-container">
           <div className="search-container">
             <label htmlFor="search"><Title fontSize="16px">{texts.search}</Title></label>
@@ -84,7 +102,7 @@ Content.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape({})),
   sortIds: PropTypes.func.isRequired,
   searchNames: PropTypes.func.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.shape({})),
+  filters: PropTypes.shape({}),
 };
 
 
