@@ -9,7 +9,7 @@ const renderOptions = (filterId, options, callback, filters) => {
     const checkboxId = `${filterId}_${option.id}`;
     return (
       <div className="each-filter-option" key={checkboxId}>
-        <input type="checkbox" id={checkboxId} name={filterId} value={option.id} checked={checkedState}
+        <input type="checkbox" id={checkboxId} name={filterId} value={option.id} checked={!!checkedState}
           onChange={e => callback({ elem: e.target, label: option.label })} />
         <label htmlFor={checkboxId}><Title fontSize="16px" displayStyle="inline-block" alignStyle="left">{option.label}</Title></label>
       </div>

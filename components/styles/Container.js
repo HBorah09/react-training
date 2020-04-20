@@ -27,6 +27,10 @@ const Container = styled.div`
       margin: 0 20px;
     }
   }
+  .filters-display-container {
+    display: flex;
+    flex-direction: row;
+  }
   .characters-container {
     width: 100%;
   }

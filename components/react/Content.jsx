@@ -37,36 +37,36 @@ const renderEachCharacter = characters => {
   });
 };
 
-const deduceSelectedOptions = selections => {
-  let choices = {};
-  const keys = Object.keys(selections);
-  keys.map(key => {
-    const value = selections[`${key}`];
-    if (value.length) {
-      choices.options = value;
-      choices.key = key;
-    }
-    return choices;
-  });
-  return choices;
+const displaySelections = (filters, name, callback) => {
+  return (<div key={name}>
+    {filters.map(choice => {
+      return <Title key={choice} className="selections" fontSize="12px" displayStyle="inline-flex">{choice}
+        <button onClick={() => callback({ elem: { name, value: choice, checked: false }, label: choice })}>X</button>
+      </Title>;
+    })}
+  </div>
+  );
 };
 
 const displayFilterSelection = (selections, callback) => {
-  const filters = deduceSelectedOptions(selections);
-  return filters.options && filters.options.length ? (<div className="selected-filters">
+  return <div className="selected-filters">
     <Title fontSize="16px">{texts.selectedFilter}</Title>
-    {filters.options.map(choice => {
-      const name = filters.key;
-      return (
-        <Title key={choice} className="selections" fontSize="12px" displayStyle="inline-flex">{choice}
-          <button onClick={() => callback({ elem: { name, value: choice, checked: false }, label: choice })}>X</button>
-        </Title>);
-    })
-    }
-  </div>) : null;
+    <div className="filters-display-container">
+      {Object.keys(selections).map(choice => {
+        const name = selections[`${choice}`];
+        return displaySelections(name, choice, callback);
+      })
+      }
+    </div>
+  </div>;
 };
 
 let textInput = null;
+
+const handleSearch = (e, callback) => {
+  e.preventDefault();
+  callback(textInput.value);
+};
 
 const Content = props => {
   const { filterCharacters, data, sortIds, filters } = props;
@@ -74,15 +74,15 @@ const Content = props => {
     <div className="content">
       <Filters filterCharacters={filterCharacters} filters={filters} />
       <div className="characters-container">
-        {filters && displayFilterSelection(filters, filterCharacters)}
+        {filters && Object.values(filters).join("") && displayFilterSelection(filters, filterCharacters)}
         <div className="input-container">
           <div className="search-container">
             <label htmlFor="search"><Title fontSize="16px">{texts.search}</Title></label>
-            <div className="search-input-container">
+            <form className="search-input-container" onSubmit={e => handleSearch(e, props.searchNames)}>
               <input type="text" id="search" ref={(input) => { textInput = input; }} />
-              <button onClick={() => props.searchNames(textInput.value)} >
-                <Title fontSize="12px">{texts.searchCTA}</Title></button>
-            </div>
+              <button type="submit" >
+                <Title fontSize="12px" value="submit">{texts.searchCTA}</Title></button>
+            </form>
           </div>
           <select className="sort-container" defaultValue="default" onChange={e => sortIds(e.target.value)}>
             <option value="default" disabled>{sortOptions.label}</option>
